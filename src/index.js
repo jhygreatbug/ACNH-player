@@ -69,4 +69,12 @@ audio.play()
 $selectHours.value = status.hours
 $selectWeather.value = status.weather
 
+setTimeout(() => {
+  const hours = new Date().getHours()
+  if (hours !== status.hours) {
+    status.hours = hours
+    audio.play()
+  }
+}, 950)
+
 })(document)
