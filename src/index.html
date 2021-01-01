@@ -6,15 +6,27 @@
     <link rel="stylesheet" href="index.css">
   </head>
   <body>
-    <h1>💖 Hello World!</h1>
-    <audio id="audio" loop src="/Users/chenjinying/Music/网易云音乐/Nintendo Sound Team - Happy New Year!.flac" controls></audio>
-    <select name="hours" id="select-hours">
-    </select>
-    <select name="weather" id="select-weather">
-      <option value="sunny">Sunny</option>
-      <option value="rainy">Rainy</option>
-      <option value="snowy">Snowy</option>
-    </select>
-    <script src="./index.js"></script>
+    <div id="app">
+      <my-audio
+        ref="audio"
+        :hours="audioStatus.hours"
+        :weather="audioStatus.weather"
+        @ready="handleAudioReady"
+      ></my-audio>
+      <select name="hours" v-model="audioStatus.hours" @change="handleHoursChange">
+        <option v-for="item in selectHoursOptions" :value="item.hours">
+          {{item.hours}}：00 {{item.isAm ? 'a.m.' : 'p.m.'}}
+        </option>
+      </select>
+      <select name="weather" v-model="audioStatus.weather" @change="handleWeatherChange">
+        <option value="sunny">Sunny</option>
+        <option value="rainy">Rainy</option>
+        <option value="snowy">Snowy</option>
+      </select>
+      <input type="checkbox" name="simulate" v-model="inputPlayMode" @change="handlePlayModeChange">
+      模拟播放
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>
+    <script type="module" src="./index.js"></script>
   </body>
 </html>
