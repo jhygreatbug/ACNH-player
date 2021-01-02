@@ -3,6 +3,9 @@
   <head>
     <meta charset="UTF-8">
     <title>Hello World!</title>
+    <!-- todo: 去除 unsafe-eval -->
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://api.map.baidu.com http://example.com; script-src 'self' 'unsafe-eval'">
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self' https://api.map.baidu.com http://example.com; script-src 'self' 'unsafe-eval'"> -->
     <link rel="stylesheet" href="index.css">
   </head>
   <body>
@@ -14,7 +17,7 @@
         @ready="handleAudioReady"
       ></my-audio>
       <select name="hours" v-model="audioStatus.hours" @change="handleHoursChange">
-        <option v-for="item in selectHoursOptions" :value="item.hours">
+        <option v-for="item in selectHoursOptions" :value="item.value">
           {{item.hours}}：00 {{item.isAm ? 'a.m.' : 'p.m.'}}
         </option>
       </select>
@@ -26,7 +29,6 @@
       <input type="checkbox" name="simulate" v-model="inputPlayMode" @change="handlePlayModeChange">
       模拟播放
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>
     <script type="module" src="./index.js"></script>
   </body>
 </html>
