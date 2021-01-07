@@ -1,5 +1,4 @@
 // import Vue from './vue.esm.browser.js'
-// const { ipcRenderer } = require('electron')
 
 const weatherMap = {
   'CLEAR_DAY': 'sunny',
@@ -173,6 +172,9 @@ const ComponentMyAudio = {
     },
   },
   methods: {
+    getStatus() {
+      return this.$audio.paused
+    },
     play() {
       this.$audio.src = this.src
       this.$audio.play()
@@ -182,8 +184,6 @@ const ComponentMyAudio = {
     }
   },
 }
-
-const configPromise = window.configPromise
 
 new Vue({
   el: '#app',
@@ -269,7 +269,8 @@ new Vue({
           // 整点更新天气
           this.updateWeather()
         }
-        if (hours !== this.audioStatus.hours) {
+        console.log(this.$audio, this.$audio.paused)
+        if (hours !== this.audioStatus.hours && !this.$audio.getStatus()) {
           // 整点更新BGM
           this.audioStatus.hours = hours
         }

@@ -2,7 +2,7 @@
   "name": "animal-crossing-new-horizons-player",
   "productName": "animal-crossing-new-horizons-player",
   "version": "0.1.0",
-  "description": "My Electron application description",
+  "description": "A player that can simulate the background music of Animal Crossing: New Horizons",
   "main": "src/main.js",
   "scripts": {
     "start": "electron-forge start",
@@ -13,40 +13,16 @@
   },
   "keywords": [],
   "author": {
-    "name": "chenjinying",
-    "email": "chenjinying@360.cn"
+    "name": "jhygreatbug",
+    "email": "jhygreatbug@gmail.com"
   },
   "license": "MIT",
   "config": {
-    "forge": {
-      "packagerConfig": {},
-      "makers": [
-        {
-          "name": "@electron-forge/maker-squirrel",
-          "config": {
-            "name": "animal_crossing_new_horizons_player"
-          }
-        },
-        {
-          "name": "@electron-forge/maker-zip",
-          "platforms": [
-            "darwin"
-          ]
-        },
-        {
-          "name": "@electron-forge/maker-deb",
-          "config": {}
-        },
-        {
-          "name": "@electron-forge/maker-rpm",
-          "config": {}
-        }
-      ]
-    }
+    "forge": "./forge.config.js"
   },
   "dependencies": {
     "electron-squirrel-startup": "^1.0.0",
-    "lowdb": "^1.0.0"
+    "electron-store": "^6.0.1"
   },
   "devDependencies": {
     "@electron-forge/cli": "^6.0.0-beta.54",

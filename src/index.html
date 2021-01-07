@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>Hello World!</title>
+    <title>Animal Crossing New Horizons Player</title>
     <!-- todo: 去除 unsafe-eval -->
     <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://api.map.baidu.com http://example.com; script-src 'self' 'unsafe-eval'">
     <meta http-equiv="X-Content-Security-Policy" content="default-src 'self' https://api.map.baidu.com http://example.com; script-src 'self' 'unsafe-eval'"> -->
@@ -19,12 +19,12 @@
           @ready="handleAudioReady"
         ></my-audio>
         <br>
-        <select name="hours" v-model="audioStatus.hours" @change="handleHoursChange">
+        <select name="hours" v-model="audioStatus.hours" :disabled="inputPlayMode" @change="handleHoursChange">
           <option v-for="item in selectHoursOptions" :value="item.value">
             {{item.hours}}：00 {{item.isAm ? 'a.m.' : 'p.m.'}}
           </option>
         </select>
-        <select name="weather" v-model="audioStatus.weather" @change="handleWeatherChange">
+        <select name="weather" v-model="audioStatus.weather" :disabled="inputPlayMode" @change="handleWeatherChange">
           <option value="sunny">Sunny</option>
           <option value="rainy">Rainy</option>
           <option value="snowy">Snowy</option>
@@ -36,9 +36,9 @@
         <div>loading...</div>
       </template>
       <template v-else-if="status === 'prepare'">
-        1. 网易云音乐搜索专辑“あつまれ どうぶつの森 オリジナルサウンドトラック”，点击 下载全部
+        1. 打开 网易云音乐|QQ音乐|酷我音乐|... ，搜索专辑“あつまれ どうぶつの森 オリジナルサウンドトラック”，下载全部专辑
         <br>
-        2. 点击 检测资源 ，如提示失败，手动选择资源目录
+        2. 手动选择下载资源所在目录
         <input type="file" @change="handleBasePathChange" webkitdirectory multiple>
       </template>
     </div>
