@@ -4,7 +4,6 @@
 
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component'
-import { getTime } from '@/common'
 
 @Options({
   props: {
@@ -14,7 +13,7 @@ import { getTime } from '@/common'
     },
     hours: {
       validator(value: number) {
-        return value >= 0 && value < 24
+        return value >= 0 && value < 24 && value === Math.floor(value)
       },
     },
     weather: {
@@ -22,21 +21,13 @@ import { getTime } from '@/common'
         return ['sunny', 'rainy', 'snowy'].indexOf(value) !== -1
       },
     },
+    files: {
+      type: Object,
+    },
   },
   emits: ['ready', 'change', 'ended'],
   data() {
-    const fileNameMap: { [key: string]: string } = {}
-    for (let i = 0; i < 24; i++) {
-      const { hours, isAm } = getTime(i)
-      fileNameMap[`${i}-sunny`] = `Nintendo Sound Team - ${hours}：00 ${isAm ? 'a.m.' : 'p.m.'
-      } (Sunny).flac`
-      fileNameMap[`${i}-rainy`] = `Nintendo Sound Team - ${hours}：00 ${isAm ? 'a.m.' : 'p.m.'
-      } (Rainy).flac`
-      fileNameMap[`${i}-snowy`] = `Nintendo Sound Team - ${hours}：00 ${isAm ? 'a.m.' : 'p.m.'
-      } (Snowy).flac`
-    }
     return {
-      fileNameMap,
       $audio: null,
     }
   },
@@ -45,12 +36,9 @@ import { getTime } from '@/common'
     this.$emit('ready', this)
   },
   computed: {
-    calcHours() {
-      return Math.floor(this.hours)
-    },
     src() {
       return (
-        `local-audio://${this.basePath}${this.fileNameMap[`${this.calcHours}-${this.weather}`]}`
+        `local-audio://${this.basePath}${this.files[`${this.hours}-${this.weather}`]}`
       )
     },
   },

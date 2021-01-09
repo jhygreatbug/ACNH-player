@@ -1,3 +1,7 @@
+declare type TConfig = {
+  audioBasePath: string
+}
+
 declare type TWeather = 'sunny' | 'rainy' | 'snowy'
 
 declare type TWeatherCache = { [key: string]: TWeather }

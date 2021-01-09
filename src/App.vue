@@ -3,9 +3,7 @@
     <template v-if="status === 'ready'">
       <my-audio
         ref="audio"
-        :base-path="audioStatus.basePath"
-        :hours="audioStatus.hours"
-        :weather="audioStatus.weather"
+        v-bind="audioStatus"
         @ready="handleAudioReady"
       ></my-audio>
       <br />
@@ -65,8 +63,10 @@ import jsonp from 'jsonp'
 import { Component } from 'vue'
 import { Options, Vue } from 'vue-class-component'
 import MyAudio from '@/components/MyAudio.vue'
-import { getTime } from '@/common'
+import { checkFiles, searchFolder, transformTime24To12 } from '@/common'
 import { weatherMap } from '@/const'
+
+const { ipcRenderer } = window
 
 const pad0 = (v: number) => `${v}`.padStart(2, '0')
 
@@ -172,6 +172,7 @@ function getWeathers() {
       })
   })
 }
+
 @Options({
   components: {
     MyAudio,
@@ -179,7 +180,7 @@ function getWeathers() {
   data() {
     const selectHoursOptions = Array.from({ length: 24 }, (v, i) => ({
       value: i,
-      ...getTime(i),
+      ...transformTime24To12(i),
     }))
     return {
       selectHoursOptions,
@@ -194,6 +195,7 @@ function getWeathers() {
         basePath: '',
         hours: getCurrentHours(),
         weather: 'sunny',
+        files: null,
       },
       inputPlayMode: true,
     }
@@ -203,26 +205,28 @@ function getWeathers() {
       return this.inputPlayMode ? 'simulate' : 'custom'
     },
   },
-  created() {
+  async created() {
     this.updateWeather()
 
-    const basePath = window.config.audioBasePath
+    const basePath = await ipcRenderer.invoke('get-config', 'audioBasePath')
     if (basePath) {
-      // todo: 如何抽取重复
-      window
-        .checkFiles(basePath)
-        .then(() => {
-          this.audioStatus.basePath = basePath
-          window.saveAudioBasePath(basePath)
-          this.status = 'ready'
-        })
-        .catch((e) => {
-          console.warn('check file failed', e)
-          this.status = 'prepare'
-        })
+      this.checkAndUpdatePath(basePath)
     }
   },
   methods: {
+    async checkAndUpdatePath(basePath: string) {
+      const result = await ipcRenderer.invoke('check-and-get-audio-files', basePath)
+      if (!result) {
+        console.warn('check file failed')
+        this.status = 'prepare'
+        return
+      }
+
+      ipcRenderer.invoke('set-config', 'audioBasePath', basePath)
+      this.audioStatus.basePath = basePath
+      this.audioStatus.files = result
+      this.status = 'ready'
+    },
     updateWeather() {
       const hourlyStr = dateToHourlyString(new Date())
       const update = (refWeatherCache: TWeatherCache, refHourlyStr: string) => {
@@ -288,18 +292,7 @@ function getWeathers() {
       }
       const file = target.files[0]
       const basePath = file.path.slice(0, file.path.lastIndexOf(file.name))
-      // todo: 如何抽取重复
-      window
-        .checkFiles(basePath)
-        .then(() => {
-          this.audioStatus.basePath = basePath
-          window.saveAudioBasePath(basePath)
-          this.status = 'ready'
-        })
-        .catch((e: unknown) => {
-          console.warn('check file failed', e)
-          this.status = 'prepare'
-        })
+      this.checkAndUpdatePath(basePath)
     },
   },
 })

@@ -1,8 +1,13 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import { app, protocol, BrowserWindow } from 'electron'
+import {
+  app, protocol, BrowserWindow, ipcMain,
+} from 'electron'
+import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
+import Store from 'electron-store'
+import fs from 'fs'
 import path from 'path'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
-import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
+import { transformTime12To24 } from './common'
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
@@ -26,7 +31,6 @@ async function createWindow() {
       // See
       //   nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration
       // for more info
-      enableRemoteModule: true,
       nodeIntegration: (process.env
         .ELECTRON_NODE_INTEGRATION as unknown) as boolean,
       preload: path.join(__dirname, 'preload.js'),
@@ -56,9 +60,9 @@ async function createWindow() {
     await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL as string)
     if (!process.env.IS_TEST) win.webContents.openDevTools()
   } else {
-    createProtocol('app')
+    createProtocol('acnh')
     // Load the index.html when not in development
-    win.loadURL('app://./index.html')
+    win.loadURL('acnh://./index.html')
   }
 }
 
@@ -107,3 +111,79 @@ if (isDevelopment) {
     })
   }
 }
+
+const store = new Store()
+
+ipcMain.handle('get-config', (event, name: string) => {
+  const result = store.get(name)
+  return result
+})
+
+ipcMain.handle('set-config', (event, name: string, value: string) => {
+  store.set(name, value)
+})
+
+const matchWeatherReg = /sunny|rainy|snowy/i
+const matchHoursReg = /([0-9]{1,2})(?:：|:|\/)\s?00/
+const matchTimeReg = /(?:a\.m\.|p\.m\.)/i
+// https://developer.mozilla.org/zh-CN/docs/Web/HTML/Supported_media_formats
+const matchSuffixReg = /.(ogg|flac|mp4|mp3|wav|webm)$/i
+const matchFile = (refPath: string) => {
+  const [weather] = matchWeatherReg.exec(refPath) || []
+  if (!weather) {
+    return ''
+  }
+
+  const [, _hours] = matchHoursReg.exec(refPath) || []
+  const hours = parseInt(_hours, 10)
+  if (hours < 1 || hours > 12) {
+    return ''
+  }
+
+  const [time] = matchTimeReg.exec(refPath) || []
+  if (!time) {
+    return ''
+  }
+
+  const [, suffix] = matchSuffixReg.exec(refPath) || []
+  if (!suffix) {
+    return ''
+  }
+
+  const trans24Hours = transformTime12To24(hours, time === 'a.m.')
+  return `${trans24Hours}-${weather.toLowerCase()}`
+}
+
+ipcMain.handle('check-and-get-audio-files', async (event, audioPath: string) => {
+  const fileNameMap: { [key: string]: string } = {}
+  for (let i = 0; i < 24; i++) {
+    fileNameMap[`${i}-sunny`] = ''
+    fileNameMap[`${i}-rainy`] = ''
+    fileNameMap[`${i}-snowy`] = ''
+  }
+  const result = await new Promise((resolve) => {
+    fs.readdir(audioPath, { withFileTypes: true }, (err, files) => {
+      if (err) {
+        console.warn(err)
+        resolve(null)
+        return
+      }
+      files.forEach((file) => {
+        if (!file.isFile()) {
+          return
+        }
+        const matchKey = matchFile(file.name)
+        if (matchKey) {
+          fileNameMap[matchKey] = file.name
+        }
+      })
+      const notOk = Object.values(fileNameMap).some((v) => !v)
+      if (notOk) {
+        resolve(null)
+      } else {
+        resolve(fileNameMap)
+      }
+    })
+  })
+  return result
+})

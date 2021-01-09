@@ -7,7 +7,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "electron:build": "vue-cli-service electron:build",
+    "electron:build": "vue-cli-service electron:build --mac default --win nsis",
     "electron:serve": "vue-cli-service electron:serve",
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps"
@@ -20,8 +20,6 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@types/electron": "^1.6.10",
-    "@types/jsonp": "^0.2.0",
     "core-js": "^3.6.5",
     "electron-store": "^6.0.1",
     "jsonp": "^0.2.1",
@@ -29,7 +27,9 @@
     "vue-class-component": "^8.0.0-0"
   },
   "devDependencies": {
+    "@types/electron": "^1.6.10",
     "@types/electron-devtools-installer": "^2.2.0",
+    "@types/jsonp": "^0.2.0",
     "@typescript-eslint/eslint-plugin": "^2.33.0",
     "@typescript-eslint/parser": "^2.33.0",
     "@vue/cli-plugin-babel": "~4.5.0",

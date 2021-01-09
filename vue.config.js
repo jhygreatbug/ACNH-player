@@ -4,7 +4,8 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 module.exports = {
   pluginOptions: {
     electronBuilder: {
-      preload: 'src/preload.js',
+      enableRemoteModule: true,
+      preload: 'src/preload.ts',
     },
   },
   configureWebpack: {
