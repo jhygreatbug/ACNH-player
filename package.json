@@ -1,6 +1,6 @@
 {
   "name": "acnh-player",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "A player that can simulate the background music of Animal Crossing: New Horizons",
   "private": true,
   "scripts": {
