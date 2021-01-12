@@ -39,7 +39,12 @@
           @change="handlePlayModeChange"
         />模拟播放
       </label>
-      <a class="feedback" href="http://so.com" target="_blank" title="通向一个网站：https://jhygreatbug.github.io/">
+      <a
+        class="feedback"
+        href="https://jhygreatbug.github.io/2021/01/12/%E4%B8%8D%E5%BF%85%E6%89%93%E5%BC%80%E6%B8%B8%E6%88%8F%EF%BC%8C%E5%B0%B1%E8%83%BD%E6%92%AD%E6%94%BE%E5%8A%A8%E6%A3%AE%E7%9A%84%E8%83%8C%E6%99%AF%E9%9F%B3%E4%B9%90%E2%80%94%E2%80%94%E3%80%8A%E9%9B%86%E5%90%88%E5%95%A6%EF%BC%81%E5%8A%A8%E7%89%A9%E6%A3%AE%E5%8F%8B%E4%BC%9A%E3%80%8B%E6%92%AD%E6%94%BE%E5%99%A8/#valine-comments"
+        target="_blank"
+        title="通向一个网站：https://jhygreatbug.github.io/"
+      >
         <icon-feedback />反馈
       </a>
     </template>
