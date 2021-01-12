@@ -31,13 +31,17 @@
         <option value="rainy">Rainy</option>
         <option value="snowy">Snowy</option>
       </select>
-      <input
-        type="checkbox"
-        name="simulate"
-        v-model="inputPlayMode"
-        @change="handlePlayModeChange"
-      />
-      模拟播放
+      <label>
+        <input
+          type="checkbox"
+          name="simulate"
+          v-model="inputPlayMode"
+          @change="handlePlayModeChange"
+        />模拟播放
+      </label>
+      <a class="feedback" href="http://so.com" target="_blank" title="通向一个网站：https://jhygreatbug.github.io/">
+        <icon-feedback />反馈
+      </a>
     </template>
     <template v-else-if="status === 'loading'">
       <div>loading...</div>
@@ -63,7 +67,8 @@ import jsonp from 'jsonp'
 import { Component } from 'vue'
 import { Options, Vue } from 'vue-class-component'
 import MyAudio from '@/components/MyAudio.vue'
-import { checkFiles, searchFolder, transformTime24To12 } from '@/common'
+import IconFeedback from '@/components/IconFeedback.vue'
+import { transformTime24To12 } from '@/common'
 import { weatherMap } from '@/const'
 
 const { ipcRenderer } = window
@@ -176,6 +181,7 @@ function getWeathers() {
 @Options({
   components: {
     MyAudio,
+    IconFeedback,
   },
   data() {
     const selectHoursOptions = Array.from({ length: 24 }, (v, i) => ({
@@ -317,5 +323,13 @@ body {
 
 #app {
   padding: 1.5rem 2rem;
+}
+
+.feedback {
+  color: #999;
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
 }
 </style>

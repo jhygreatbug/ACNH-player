@@ -1,7 +1,7 @@
 /* global __static */
 /* eslint-disable import/no-extraneous-dependencies */
 import {
-  app, protocol, BrowserWindow, ipcMain,
+  app, protocol, BrowserWindow, ipcMain, shell, Menu,
 } from 'electron'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 import Store from 'electron-store'
@@ -115,6 +115,17 @@ if (isDevelopment) {
     })
   }
 }
+
+// 所有链接用默认浏览器打开
+app.on('web-contents-created', (e, webContents) => {
+  webContents.on('new-window', (event, url) => {
+    event.preventDefault()
+    shell.openExternal(url)
+  })
+})
+
+// 取消默认菜单
+Menu.setApplicationMenu(null)
 
 const store = new Store()
 
