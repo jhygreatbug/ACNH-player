@@ -1,6 +1,0 @@
-appId: 'com.example.app'
-files:
-  - './build/icon.*'
-  - '**/*.flac'
-directories:
-  buildResources: './build'

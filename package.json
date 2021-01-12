@@ -1,6 +1,6 @@
 {
   "name": "animal-crossing-new-horizons-player",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A player that can simulate the background music of Animal Crossing: New Horizons",
   "private": true,
   "scripts": {
@@ -8,7 +8,11 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "electron:build": "vue-cli-service electron:build --mac default --win nsis",
+    "electron:build-mac": "vue-cli-service electron:build --mac default",
+    "electron:build-win": "vue-cli-service electron:build --win nsis",
+    "electron:publish": "vue-cli-service electron:build --mac default --win nsis -p always",
     "electron:serve": "vue-cli-service electron:serve",
+    "electron:generate-icons": "electron-icon-builder --input=./public/icon.png --output=build --flatten",
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps"
   },
@@ -22,6 +26,7 @@
   "dependencies": {
     "core-js": "^3.6.5",
     "electron-store": "^6.0.1",
+    "electron-updater": "^4.3.5",
     "jsonp": "^0.2.1",
     "vue": "^3.0.0",
     "vue-class-component": "^8.0.0-0"

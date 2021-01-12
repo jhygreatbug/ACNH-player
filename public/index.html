@@ -5,11 +5,11 @@
     <% if (webpackConfig.mode !== 'development') { %>
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self' https://api.map.baidu.com; script-src 'self'; media-src local-audio://*"
+      content="default-src 'self'; script-src 'self' https://api.map.baidu.com https://api.caiyunapp.com; media-src local-audio://*"
     />
     <meta
       http-equiv="X-Content-Security-Policy"
-      content="default-src 'self' https://api.map.baidu.com; script-src 'self'; media-src local-audio://*"
+      content="default-src 'self'; script-src 'self' https://api.map.baidu.com https://api.caiyunapp.com; media-src local-audio://*"
     />
     <% } %>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />

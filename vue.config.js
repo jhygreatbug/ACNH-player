@@ -6,6 +6,10 @@ module.exports = {
     electronBuilder: {
       enableRemoteModule: true,
       preload: 'src/preload.ts',
+      customFileProtocol: 'acnh://./',
+      builderOptions: {
+        publish: ['github'],
+      },
     },
   },
   configureWebpack: {

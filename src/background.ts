@@ -1,9 +1,11 @@
+/* global __static */
 /* eslint-disable import/no-extraneous-dependencies */
 import {
   app, protocol, BrowserWindow, ipcMain,
 } from 'electron'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 import Store from 'electron-store'
+import { autoUpdater } from 'electron-updater'
 import fs from 'fs'
 import path from 'path'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
@@ -17,7 +19,7 @@ if (isDevelopment) {
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
-  { scheme: 'app', privileges: { secure: true, standard: true } },
+  { scheme: 'acnh', privileges: { secure: true, standard: true } },
 ])
 
 async function createWindow() {
@@ -35,6 +37,7 @@ async function createWindow() {
         .ELECTRON_NODE_INTEGRATION as unknown) as boolean,
       preload: path.join(__dirname, 'preload.js'),
     },
+    icon: path.join(__static, 'icon.png'),
   })
 
   protocol.registerFileProtocol('local-audio', (request, callback) => {
@@ -63,6 +66,7 @@ async function createWindow() {
     createProtocol('acnh')
     // Load the index.html when not in development
     win.loadURL('acnh://./index.html')
+    autoUpdater.checkForUpdatesAndNotify()
   }
 }
 
